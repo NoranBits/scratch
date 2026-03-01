@@ -1,0 +1,12 @@
+# AntiGravity Workspace Ignore Rules
+TEMP/
+__pycache__/
+node_modules/
+.venv/
+.gemini/
+*.log
+.DS_Store
+dist/
+build/
+.env
+.ipynb_checkpoints/

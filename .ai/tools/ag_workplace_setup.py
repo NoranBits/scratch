@@ -1,52 +1,41 @@
-import os
 import subprocess
-import argparse
+import os
 import sys
-from datetime import datetime
+from pathlib import Path
 
-def run_tool(tool_name, *args):
-    tool_path = os.path.join(os.path.dirname(__file__), tool_name)
-    if not os.path.exists(tool_path):
-        print(f"ERROR: Tool {tool_name} not found at {tool_path}")
-        return False
-    
-    cmd = [sys.executable, tool_path] + list(args)
-    print(f"--- Running {tool_name} ---")
+def run_step(name, cmd, cwd):
+    print(f"--- [STEP] {name} ---")
     try:
-        subprocess.run(cmd, check=True)
-        return True
+        result = subprocess.run(cmd, cwd=cwd, shell=True, check=True, capture_output=True, text=True)
+        print(result.stdout)
     except subprocess.CalledProcessError as e:
-        print(f"ERROR: {tool_name} failed with code {e.returncode}")
-        return False
-
-def workplace_routine(write=False):
-    print(f"=== AntiGravity Workplace Routine: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} ===")
-    
-    # 1. Environment Sanitization
-    run_tool("ag_env_sanitizer.py", "--path", ".")
-    
-    # 2. Security Audit
-    run_tool("ag_security_scanner.py", "--path", ".")
-    
-    # 3. Structure Validation (ag_core logic)
-    # Note: ag_core doesn't have a standalone CLI main in the same way, 
-    # but we can call ag_skillset_gen or others that use it.
-    
-    # 4. Mission Control Refresh (Updating INDEX.md)
-    # Since ag_summarizer is for removals, we'll manually update INDEX.md or use a generic summary
-    print("--- Updating Mission Control ---")
-    index_path = os.path.join(os.path.dirname(__file__), "..", "INDEX.md")
-    with open(index_path, "a") as f:
-        f.write(f"\n- [ROUTINE] Workplace Audit completed at {datetime.now().isoformat()}\n")
-    
-    print("=== Routine Complete ===")
+        print(f"FAILED: {e}")
+        print(e.stderr)
 
 def main():
-    parser = argparse.ArgumentParser(description="AG Workplace Routine")
-    parser.add_argument("--write", action="store_true", help="Authorize active updates (if tools support it)")
+    ROOT = Path(__file__).parent.parent.parent
+    TOOLS = ROOT / ".ai" / "tools"
     
-    args = parser.parse_args()
-    workplace_routine(write=args.write)
+    print("Initializing AntiGravity Workplace Setup...")
+    
+    # Ensure structure
+    for d in ["TEMP", "external_repos", ".ai/STATE", ".ai/EVIDENCE"]:
+        (ROOT / d).mkdir(parents=True, exist_ok=True)
+        
+    # 1. Git Pulse
+    run_step("Git Pulse Sync", [sys.executable, str(TOOLS / "ag_git_pulse.py")], ROOT)
+    
+    # 2. Dependency Hoist
+    run_step("Dependency Audit", [sys.executable, str(TOOLS / "ag_dep_hoister.py")], ROOT)
+    
+    # 3. Node/NPM Sync (via Shim)
+    if (TOOLS / "ag_npm_shim.py").exists():
+        run_step("Node Health Sync", [sys.executable, str(TOOLS / "ag_npm_shim.py"), "run", "sync"], ROOT)
+    
+    # 4. Neural Documentation Generation
+    run_step("Neural Refresh", [sys.executable, str(TOOLS / "ag_readme_gen.py")], ROOT)
+    
+    print("\n✅ Workplace Setup Complete. Mission Control updated.")
 
 if __name__ == "__main__":
     main()
