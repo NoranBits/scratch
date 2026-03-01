@@ -1,0 +1,31 @@
+{
+  "deviations_risks": [],
+  "executed_commands": [
+    "ag_digest.py verify",
+    "ag_adapter_gen.py --chunk CHUNK_01 --now-utc 2026-03-01T15:00:00Z"
+  ],
+  "now_utc_used": true,
+  "outputs_created": [
+    "c:\\Users\\nono\\.gemini\\antigravity\\scratch\\.ai\\STREAMS\\_config\\protected_paths.json",
+    "c:\\Users\\nono\\.gemini\\antigravity\\scratch\\.ai\\STREAMS\\20260301\\CHUNK_01\\ADAPTER_PROPOSAL.json",
+    "c:\\Users\\nono\\.gemini\\antigravity\\scratch\\.ai\\STREAMS\\20260301\\CHUNK_01\\ADAPTER_PROPOSAL.md"
+  ],
+  "tests_run": [
+    {
+      "name": "M1 Negative Test (GOVERNANCE)",
+      "status": "PASS - DENIED: DENY = Path c:\\Users\\nono\\.gemini\\antigravity\\scratch\\.ai\\GOVERNANCE\\test.json is outside of WRITE_ALLOWLIST_ROOTS."
+    },
+    {
+      "name": "M3 Verify Command",
+      "status": "PASS - Generated report"
+    },
+    {
+      "name": "M2 Bootstrap",
+      "status": "PASS"
+    },
+    {
+      "name": "M4 & M5 Proposal Emitter",
+      "status": "PASS"
+    }
+  ]
+}

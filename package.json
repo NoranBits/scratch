@@ -1,0 +1,22 @@
+{
+    "name": "antigravity-scratch",
+    "version": "1.0.0",
+    "description": "AntiGravity Workspace Scratch with Neural Visualization",
+    "main": "index.js",
+    "scripts": {
+        "sync": "node .ai/tools/ag_node_sync.js",
+        "generate": "python .ai/tools/ag_readme_gen.py",
+        "audit": "node .ai/tools/ag_dep_checker.js",
+        "test": "node .ai/SAMPLES/node_tools/sample_analyzer.js .ai/tools"
+    },
+    "keywords": [
+        "antigravity",
+        "agentic",
+        "orchestration"
+    ],
+    "engines": {
+        "node": ">=18.0.0"
+    },
+    "author": "AntiGravity AI",
+    "license": "ISC"
+}

@@ -1,0 +1,19 @@
+{
+  "capability_changes": [
+    {
+      "name": "Generated Adapter Template",
+      "rationale": "Extracted from digest report.",
+      "risk": "MEDIUM",
+      "rollback": "Remove from capabilities.",
+      "tests": "Depends on field agent."
+    }
+  ],
+  "proposal_id": "PROP-20260301-CHUNK_01",
+  "requested_write_targets": [
+    "STREAMS/20260301/CHUNK_01/output.json"
+  ],
+  "requires_manual_validation": true,
+  "source_digest_evid_ids": [
+    "EVID:DOC:20260301:0000"
+  ]
+}

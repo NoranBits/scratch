@@ -1,0 +1,9 @@
+{
+  "commands": "NEW or APPROVE",
+  "reasoning": [
+    "Task count (4) exceeds safe context entropy limit.",
+    "Multiple independent goals detected."
+  ],
+  "suggested_loop_id": "AG-20260301-01",
+  "trigger": "Complexity threshold exceeded (>3 tasks)"
+}

@@ -1,0 +1,52 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Federation Mirror Schema (EVID:FED)",
+    "description": "Schema for bridging satellite repository state into the central registry.",
+    "type": "object",
+    "required": [
+        "satellite_id",
+        "satellite_root",
+        "satellite_loop_id",
+        "state_hash",
+        "captured_utc",
+        "trust"
+    ],
+    "properties": {
+        "satellite_id": {
+            "type": "string",
+            "description": "Canonical identifier for the source satellite repository."
+        },
+        "satellite_root": {
+            "type": "string",
+            "description": "File system path to the satellite root."
+        },
+        "satellite_loop_id": {
+            "type": "string",
+            "description": "The loop ID associated with the mirrored state."
+        },
+        "state_hash": {
+            "type": "string",
+            "description": "The SHA-256 stable state hash from the satellite."
+        },
+        "captured_utc": {
+            "type": "string",
+            "format": "date-time",
+            "description": "ISO 8601 timestamp of when the mirror was captured."
+        },
+        "trust": {
+            "type": "string",
+            "enum": [
+                "VERIFY",
+                "PROMOTED",
+                "FACT"
+            ],
+            "default": "VERIFY",
+            "description": "Trust level of the mirrored data."
+        },
+        "source_peer_file": {
+            "type": "string",
+            "description": "The specific peers.md file that cataloged this satellite."
+        }
+    },
+    "additionalProperties": false
+}

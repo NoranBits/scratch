@@ -1,0 +1,13 @@
+{
+  "skillset_id": "SKSET-2026PM01-2117",
+  "name": "Active Skillset",
+  "description": "",
+  "skills": [
+    {
+      "id": "diag_integrity",
+      "path": "[ROOT]/.ai/SKILLS/diag_integrity.md"
+    }
+  ],
+  "author": "AntiGravity (Automated)",
+  "created_at": "2026-03-01T21:17:40.200691"
+}

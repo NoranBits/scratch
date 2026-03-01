@@ -1,0 +1,22 @@
+{
+  "constraints": [
+    "WRITE_ALLOWLIST_ROOTS enforced",
+    "No L1 silent updates"
+  ],
+  "exit_criteria": "All milestones verified with evidence.",
+  "loop_id": "AG-20260301-01",
+  "milestone_plan": [
+    "M1: Build Robot",
+    "M2: Mars Transit",
+    "M3: Install Linux",
+    "M4: Water Search"
+  ],
+  "schema_id": "04_SCHEMA_INTENT_CARD",
+  "success_metrics": [
+    "Complete Build Robot",
+    "Complete Mars Transit",
+    "Complete Install Linux",
+    "Complete Water Search"
+  ],
+  "user_intent_summary": "Build a robot, fly to Mars, install Linux, and find water."
+}

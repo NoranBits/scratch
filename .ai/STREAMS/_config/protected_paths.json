@@ -1,0 +1,10 @@
+{
+  "description": "Diagnostic reference list of protected governance paths.",
+  "protected": [
+    "GOVERNANCE",
+    "HANDOFFS",
+    "STABLE_STATE",
+    "PROTOCOL",
+    "LAYER_00_09"
+  ]
+}

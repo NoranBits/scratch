@@ -1,0 +1,11 @@
+{
+  "format_version": "1.0.0",
+  "item_name": "TestItem",
+  "preserved_evid_ids": [
+    "EVID:CODE:20260301:9993",
+    "EVID:DOC:20260301:9991",
+    "EVID:TEST:20260301:9992"
+  ],
+  "removed_at_utc": "2026-03-01T19:25:48.096611+00:00",
+  "summary": "Summarizing the test item"
+}

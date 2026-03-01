@@ -1,0 +1,35 @@
+{
+    "skillset_id": "SKSET-20260301-FIELD-AGENT",
+    "name": "Field Agent Core Sample",
+    "description": "Comprehensive skill package for autonomous repository governance and orchestration sync.",
+    "version": "1.0.0",
+    "author": "AntiGravity (Intent Synchronizer)",
+    "skills": [
+        {
+            "id": "diagnostic_integrity",
+            "path": "[ROOT]/.ai/SAMPLES/SKILLS/skill_diagnostic_integrity.md",
+            "load_priority": "CRITICAL"
+        },
+        {
+            "id": "kb_harmonization",
+            "path": "[ROOT]/.ai/SAMPLES/SKILLS/skill_kb_harmonization.md",
+            "load_priority": "STANDARD"
+        },
+        {
+            "id": "federation_handshake",
+            "path": "[ROOT]/.ai/SAMPLES/SKILLS/skill_federation_handshake.md",
+            "load_priority": "LOAD_ON_DEMAND"
+        }
+    ],
+    "default_grounding": [
+        "[ROOT]/AGNOSTIC-ORCH/MASTER_SYSTEM_INSTRUCTION_AI_AGNOSTIC_v1.2.1.md",
+        "[ROOT]/AGNOSTIC-ORCH/knowledge/00_PROTOCOL_LAYER.md"
+    ],
+    "security_mode": "ZERO_TRUST_ENFORCED",
+    "review_metadata": {
+        "review_owner": "Council_Member_Alpha",
+        "last_reviewed_utc": "2026-03-01T21:45:00Z",
+        "review_status": "APPROVED",
+        "loop_id": "AG-20260301-01"
+    }
+}
