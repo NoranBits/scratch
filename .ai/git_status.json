@@ -1,14 +1,14 @@
 {
   "is_repo": true,
   "branch": "dev",
-  "last_commit": "b071527 - feat(release): implement multi-phase nexus and release radar (19 minutes ago)",
+  "last_commit": "117c4d1 - merge: resolve conflicts between neural scaling and github enchantments (0 seconds ago)",
   "remotes": [
     "origin"
   ],
-  "status": "512 changes",
+  "status": "8 changes",
   "phases": {
     "dev": {
-      "last_commit": "b071527 (19 minutes ago)",
+      "last_commit": "117c4d1 (1 second ago)",
       "exists": true
     },
     "demos": {
