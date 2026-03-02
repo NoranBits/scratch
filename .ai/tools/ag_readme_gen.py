@@ -1,9 +1,21 @@
 import os
 import json
 import re
+import subprocess
 from pathlib import Path
 
-# --- TEMPLATES ---
+def get_github_url():
+    try:
+        remotes = subprocess.run(["git", "remote", "-v"], capture_output=True, text=True).stdout
+        match = re.search(r'github\.com[:/](.+?)\.git', remotes)
+        if match:
+            return f"https://github.com/{match.group(1)}"
+    except:
+        pass
+    return None
+
+GITHUB_REPO_URL = get_github_url()
+
 # --- TEMPLATES ---
 ROOT_TEMPLATE = """<!DOCTYPE html>
 <html lang="en">
@@ -39,12 +51,34 @@ ROOT_TEMPLATE = """<!DOCTYPE html>
                 <div class="w-16 h-16 bg-gradient-to-br from-cyan-400 to-purple-600 rounded-2xl flex items-center justify-center text-3xl font-black text-white italic shadow-[0_0_20px_rgba(34,211,238,0.4)]">AG</div>
                 <div>
                     <h1 class="text-4xl font-extrabold tracking-tighter uppercase mb-1">Mission Control</h1>
-                    <p class="text-sm font-mono text-cyan-400/80 tracking-widest uppercase italic">Architectural Neuron Interface v4.0</p>
+                    <div class="flex items-center gap-3">
+                        <p class="text-sm font-mono text-cyan-400/80 tracking-widest uppercase italic">Architectural Neuron Interface v4.5</p>
+                        <script>
+                            const GITHUB_REPO_URL = {GITHUB_REPO_URL};
+                            if (GITHUB_REPO_URL) {
+                                document.write(`
+                                    <a href="${GITHUB_REPO_URL}" target="_blank" class="glass px-2 py-0.5 rounded text-[10px] text-slate-400 hover:text-cyan-400 border-white/5 flex items-center gap-1.5 transition-all">
+                                        <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+                                        GitHub Repo
+                                    </a>
+                                `);
+                            }
+                        </script>
+                    </div>
                 </div>
             </div>
-            <div class="text-right hidden md:block">
+            <div class="text-right hidden md:block space-y-2">
                 <div class="text-[10px] font-bold text-slate-500 uppercase tracking-[0.3em] mb-1">Current Protocol</div>
-                <div class="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">NEURAL_INSIGHTS_ENGAGED</div>
+                <div class="flex flex-col items-end gap-2">
+                    <div class="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">NEURAL_INSIGHTS_ENGAGED</div>
+                    <script>
+                        if (GITHUB_REPO_URL) {
+                            document.write(`
+                                <img src="${GITHUB_REPO_URL}/actions/workflows/ag_ecosystem_release.yml/badge.svg" alt="CI Status" class="h-4 opacity-80 hover:opacity-100 transition-opacity">
+                            `);
+                        }
+                    </script>
+                </div>
             </div>
         </header>
 
@@ -140,8 +174,8 @@ ROOT_TEMPLATE = """<!DOCTYPE html>
                         </div>
 
                         <div class="pt-4 border-t border-white/5 mt-4">
-                            <h3 class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3">Terminal Hub</h3>
-                            <div class="p-4 bg-slate-950/80 rounded-xl border border-cyan-500/20 group hover:border-cyan-500/40 transition-all cursor-pointer" onclick="copyToClipboard('npm run bash')">
+                            <h3 class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3" onclick="copyToClipboard('npm run bash')">Terminal Hub</h3>
+                            <div class="p-4 bg-slate-950/80 rounded-xl border border-cyan-500/20 group hover:border-cyan-500/40 transition-all cursor-pointer">
                                 <div class="flex justify-between items-center mb-1">
                                     <span class="text-[9px] font-bold text-cyan-400 uppercase tracking-tighter">GIT BASH</span>
                                     <span class="text-[8px] text-slate-600 font-mono group-hover:text-cyan-400 transition-colors">Click to Copy</span>
@@ -157,14 +191,6 @@ ROOT_TEMPLATE = """<!DOCTYPE html>
                                 <!-- Populated by JS -->
                             </div>
                         </div>
-                    </div>
-                </section>
-
-                <!-- Guidance & Protocol -->
-                <section id="guidance-panel" class="glass p-8 rounded-2xl border-white/5 space-y-6 overflow-hidden">
-                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest">System Guidance</h3>
-                    <div id="guidance-content" class="space-y-4 text-xs text-slate-400 italic leading-relaxed">
-                        Hover over a neuron in the architectural graph to see deeper structural insights and node-specific guidance.
                     </div>
                 </section>
             </aside>
@@ -183,33 +209,6 @@ ROOT_TEMPLATE = """<!DOCTYPE html>
         }};
 
         async function init() {{
-            // Utility: Copy to Clipboard
-            window.copyToClipboard = (text) => {{
-                navigator.clipboard.writeText(text);
-                const toast = document.createElement('div');
-                toast.className = 'fixed bottom-8 right-8 bg-cyan-500 text-black px-4 py-2 rounded-full text-xs font-bold z-[100] animate-bounce';
-                toast.innerText = 'CMD COPIED';
-                document.body.appendChild(toast);
-                setTimeout(() => toast.remove(), 2000);
-            }};
-
-            // GPG Security Status
-            try {{
-                const gpgResp = await fetch('.ai/GPG_PUBLIC_KEY.txt');
-                if (gpgResp.ok) {{
-                    document.getElementById('gpg-status-icon').classList.remove('bg-slate-700', 'animate-pulse');
-                    document.getElementById('gpg-status-icon').classList.add('bg-emerald-400', 'shadow-[0_0_8px_rgba(52,211,153,0.5)]');
-                    document.getElementById('gpg-status-text').innerText = 'VERIFIED SIGNING';
-                    document.getElementById('gpg-status-text').classList.remove('text-slate-500');
-                    document.getElementById('gpg-status-text').classList.add('text-emerald-400');
-                    
-                    // Extract fingerprint placeholder (simulated for now)
-                    document.getElementById('gpg-fingerprint').innerText = 'SEC-RSA-4096-ACTIVE';
-                }}
-            }} catch (e) {{
-                console.log("GPG metadata not found.");
-            }}
-
             const stats = {stats_json};
             const graph = {graph_json};
             const currentPath = "{rel_path_val}";
@@ -218,8 +217,6 @@ ROOT_TEMPLATE = """<!DOCTYPE html>
             document.getElementById('stat-eff').innerText = stats.avg_efficiency + '%';
             document.getElementById('bar-eff').style.width = stats.avg_efficiency + '%';
             document.getElementById('stat-vol').innerText = (stats.total_volume_bytes / 1024).toFixed(1) + ' KB';
-            document.getElementById('stat-nodes').innerText = stats.directories;
-            document.getElementById('stat-files').innerText = stats.files;
 
             if (stats.git_pulse) {{
                 document.getElementById('git-branch').innerText = stats.git_pulse.branch;
@@ -246,50 +243,31 @@ ROOT_TEMPLATE = """<!DOCTYPE html>
                 }}).join('');
             }}
 
-            if (stats.dep_hoist) {{
-                document.getElementById('dep-shared').innerText = Object.keys(stats.dep_hoist.shared).length;
-                document.getElementById('dep-conflicts').innerText = stats.dep_hoist.conflicts.length;
-            }}
-
             const container = document.getElementById('neuron-graph');
             let width = container.clientWidth;
             let height = container.clientHeight;
 
             const svg = d3.select("#neuron-graph").append("svg")
-                .attr("viewBox", [0, 0, width, height])
-                .attr("preserveAspectRatio", "xMidYMid meet");
-
-            const colorMap = {{
-                "root": "#22d3ee",
-                "tool_py": "#a855f7",
-                "tool_node": "#10b981",
-                "sample": "#f59e0b",
-                "data": "#f43f5e",
-                "remote_repo": "#3b82f6",
-                "directory": "#64748b"
-            }};
+                .attr("viewBox", [0, 0, width, height]);
 
             const simulation = d3.forceSimulation(graph.nodes)
                 .force("link", d3.forceLink(graph.links).id(d => d.id).distance(100))
-                .force("charge", d3.forceManyBody().strength(-200))
+                .force("charge", d3.forceManyBody().strength(-300))
                 .force("center", d3.forceCenter(width / 2, height / 2));
 
             const link = svg.append("g")
                 .selectAll("line")
                 .data(graph.links)
                 .join("line")
-                .attr("class", "neuron-link")
-                .style("stroke-opacity", d => (d.source.path === currentPath || d.target.path === currentPath) ? 0.8 : 0.2);
+                .attr("class", "neuron-link");
 
             const node = svg.append("g")
                 .selectAll("circle")
                 .data(graph.nodes)
                 .join("circle")
-                .attr("r", d => d.path === currentPath ? 12 : (6 + (d.density * 6)))
-                .attr("class", d => "neuron-node" + (d.path === currentPath ? " active" : ""))
-                .attr("fill", d => colorMap[d.type] || colorMap["directory"])
-                .style("filter", d => `brightness(${{0.6 + (d.density * 0.8)}})`)
-                .style("opacity", d => 0.5 + (d.density * 0.5))
+                .attr("r", d => d.type === "root" ? 12 : 8)
+                .attr("class", "neuron-node")
+                .attr("fill", d => colorMap[d.type])
                 .call(d3.drag()
                     .on("start", dragstarted)
                     .on("drag", dragged)
@@ -335,19 +313,10 @@ ROOT_TEMPLATE = """<!DOCTYPE html>
                 }})
                 .on("click", (e, d) => window.location.href = (currentPath === "." ? "" : "../".repeat(currentPath.split('/').length)) + d.path + '/readme.html');
 
-            node.append("title").text(d => `${{d.path}} (Density: ${{Math.round(d.density * 100)}}%)`);
-
             simulation.on("tick", () => {{
                 link.attr("x1", d => d.source.x).attr("y1", d => d.source.y)
                     .attr("x2", d => d.target.x).attr("y2", d => d.target.y);
                 node.attr("cx", d => d.x).attr("cy", d => d.y);
-            }});
-
-            window.addEventListener("resize", () => {{
-                width = container.clientWidth;
-                height = container.clientHeight;
-                svg.attr("viewBox", [0, 0, width, height]);
-                simulation.force("center", d3.forceCenter(width / 2, height / 2)).alpha(0.3).restart();
             }});
 
             function dragstarted(event) {{
@@ -379,15 +348,17 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     <title>AntiGravity | {title}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap');
         :root {{ --cyan: #22d3ee; --purple: #a855f7; --bg: #020617; }}
         body {{ background-color: var(--bg); color: #f8fafc; font-family: 'Outfit', sans-serif; min-height: 100vh; }}
         .glass {{ background: rgba(15, 23, 42, 0.4); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); }}
         .cyber-grid {{ background-image: linear-gradient(rgba(34, 211, 238, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(34, 211, 238, 0.03) 1px, transparent 1px); background-size: 40px 40px; }}
+        .neuron-node {{ stroke: #fff; stroke-width: 1px; cursor: pointer; opacity: 0.8; }}
+        .neuron-node.active {{ stroke-width: 2px; filter: drop-shadow(0 0 8px var(--cyan)); opacity: 1; }}
+        .neuron-link {{ stroke: rgba(34, 211, 238, 0.1); stroke-opacity: 0.4; stroke-width: 1px; }}
         .file-row:hover {{ background: rgba(255, 255, 255, 0.03); }}
-        ::-webkit-scrollbar {{ width: 4px; }}
-        ::-webkit-scrollbar-thumb {{ background: rgba(34, 211, 238, 0.2); border-radius: 10px; }}
     </style>
 </head>
 <body class="bg-slate-950 text-slate-200 font-sans min-h-screen flex flex-col items-center">
@@ -400,8 +371,8 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         <div id="neuron-graph" class="w-full h-[300px]"></div>
     </section>
 
-    <div class="w-full max-w-5xl p-6 lg:p-12 space-y-8 relative z-10">
-        <header class="flex justify-between items-end border-b border-white/5 pb-6">
+    <div class="w-full max-w-6xl p-6 lg:p-12 space-y-8 relative z-10">
+        <nav class="flex items-center justify-between glass p-4 rounded-xl">
             <div class="flex items-center gap-4">
                 <div class="w-8 h-8 bg-gradient-to-br from-cyan-400 to-purple-600 rounded-lg flex items-center justify-center font-bold text-white italic">AG</div>
                 <div class="flex flex-col">
@@ -409,7 +380,13 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                     <span class="text-sm font-mono text-cyan-400">{rel_path}</span>
                 </div>
             </div>
-            <a href="{parent_link}" class="text-xs font-bold text-slate-400 hover:text-white transition-all uppercase tracking-widest">Back to Parent</a>
+            <div class="flex items-center gap-6">
+                <a href="{parent_link}" class="text-xs font-bold text-slate-400 hover:text-white transition-all uppercase tracking-widest flex items-center gap-2">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+                    Back
+                </a>
+                {github_link}
+            </div>
         </nav>
 
         <div class="grid lg:grid-cols-[1fr_350px] gap-8">
@@ -478,6 +455,8 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     <script>
         const ctx = document.getElementById('typeChart').getContext('2d');
         const stats = {stats_json};
+        const graph = {graph_json};
+        const currentPath = "{rel_path_val}";
         
         new Chart(ctx, {{
             type: 'doughnut',
@@ -491,6 +470,59 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                 }}]
             }},
             options: {{ cutout: '80%', plugins: {{ legend: {{ display: false }} }} }}
+        }});
+
+        // Neuron Pulse Header
+        const container = document.getElementById('neuron-graph');
+        let width = container.clientWidth;
+        let height = container.clientHeight;
+
+        const svg = d3.select("#neuron-graph").append("svg")
+            .attr("viewBox", [0, 0, width, height]);
+
+        const colorMap = {{
+            "root": "#22d3ee",
+            "tool_py": "#a855f7",
+            "tool_node": "#10b981",
+            "sample": "#f59e0b",
+            "data": "#f43f5e",
+            "remote_repo": "#3b82f6",
+            "directory": "#64748b"
+        }};
+
+        const simulation = d3.forceSimulation(graph.nodes)
+            .force("link", d3.forceLink(graph.links).id(d => d.id).distance(80))
+            .force("charge", d3.forceManyBody().strength(-200))
+            .force("center", d3.forceCenter(width / 2, height / 2));
+
+        const link = svg.append("g")
+            .selectAll("line")
+            .data(graph.links)
+            .join("line")
+            .attr("class", "neuron-link")
+            .style("stroke-opacity", d => (d.source.path === currentPath || d.target.path === currentPath) ? 0.8 : 0.2);
+
+        const node = svg.append("g")
+            .selectAll("circle")
+            .data(graph.nodes)
+            .join("circle")
+            .attr("r", d => d.path === currentPath ? 10 : (5 + (d.density * 5)))
+            .attr("class", d => "neuron-node" + (d.path === currentPath ? " active" : ""))
+            .attr("fill", d => colorMap[d.type] || colorMap["directory"])
+            .style("opacity", d => 0.5 + (d.density * 0.5))
+            .on("click", (e, d) => window.location.href = (currentPath === "." ? "" : "../".repeat(currentPath.split('/').length)) + d.path + '/readme.html');
+
+        simulation.on("tick", () => {{
+            link.attr("x1", d => d.source.x).attr("y1", d => d.source.y)
+                .attr("x2", d => d.target.x).attr("y2", d => d.target.y);
+            node.attr("cx", d => d.x).attr("cy", d => d.y);
+        }});
+
+        window.addEventListener("resize", () => {{
+            width = container.clientWidth;
+            height = container.clientHeight;
+            svg.attr("viewBox", [0, 0, width, height]);
+            simulation.force("center", d3.forceCenter(width / 2, height / 2)).alpha(0.3).restart();
         }});
     </script>
 </body>
@@ -586,18 +618,14 @@ def generate_readme(dir_path, root_path, graph_data):
             "type": node_type,
             "size_raw": 0,
             "eff": 100,
-            "density": 0.1 # Placeholder
+            "density": 0.1
         })
     
-    # Track node for stats update
     current_node = next(n for n in graph_data["nodes"] if n["id"] == node_id)
-
     try:
         entries = sorted(list(dir_path.iterdir()), key=lambda x: (not x.is_dir(), x.name.lower()))
-    except PermissionError:
-        return 0, 0
-    
-    # Calculate density factor
+    except: return 0, 0
+
     child_folders = len([e for e in entries if e.is_dir()])
     child_files = len(entries) - child_folders
     current_node["density"] = min(1.0, (child_folders * 0.2) + (child_files * 0.05))
@@ -614,13 +642,15 @@ def generate_readme(dir_path, root_path, graph_data):
             link_target = f"{entry.name}/readme.html"
             icon = '<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 16 16"><path d="M1.75 1A1.75 1.75 0 0 0 0 2.75v10.5C0 14.216.784 15 1.75 15h12.5A1.75 1.75 0 0 0 16 13.25V5.25A1.75 1.75 0 0 0 14.25 3.5h-4.5L8.62 1.379A1.75 1.75 0 0 0 7.379 1H1.75Z"></path></svg>'
             color = "text-cyan-400"
-            # Add edge
             child_rel = str(entry.relative_to(root_path)).replace(os.sep, '/')
             graph_data["links"].append({"source": node_id, "target": f"node_{child_rel}", "type": "nesting"})
         else:
             ext = entry.suffix[1:].lower() if entry.suffix else "file"
             type_label = ext
-            size = entry.stat().st_size
+            try:
+                size = entry.stat().st_size
+            except (FileNotFoundError, PermissionError):
+                size = 0
             total_size += size
             eff = get_token_efficiency(entry)
             efficiencies.append(eff)
@@ -641,18 +671,25 @@ def generate_readme(dir_path, root_path, graph_data):
     
     title = rel_path_str if rel_path_str != "." else "Mission Control"
     guidance = GUIDANCE_MAP.get(rel_path_str, "Standard workspace directory. Maintain clean structure.")
-    html = HTML_TEMPLATE.format(title=title, rel_path=f"ROOT/{rel_path_str}", item_count=len(items_html), items="".join(items_html), parent_link="../readme.html" if rel_path_str != "." else "#", guidance=guidance, total_size=format_size(total_size), efficiency=avg_eff, plans=get_plans_from_file(dir_path), stats_json=json.dumps(type_stats), graph_json=json.dumps(graph_data), rel_path_val=rel_path_str)
+    
+    github_link = ""
+    if GITHUB_REPO_URL:
+        branch = "master"
+        gh_path = f"{GITHUB_REPO_URL}/tree/{branch}/{rel_path_str}" if rel_path_str != "." else GITHUB_REPO_URL
+        github_link = f'<a href="{gh_path}" target="_blank" class="text-xs font-bold text-cyan-400 hover:text-cyan-300 transition-all uppercase tracking-widest flex items-center gap-2"><svg class="w-3 h-3" fill="currentColor" viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg> View on GitHub</a>'
+
+    html = HTML_TEMPLATE.format(title=title, rel_path=f"ROOT/{rel_path_str}", item_count=len(items_html), items="".join(items_html), parent_link="../readme.html" if rel_path_str != "." else "#", guidance=guidance, total_size=format_size(total_size), efficiency=avg_eff, plans=get_plans_from_file(dir_path), stats_json=json.dumps(type_stats), github_link=github_link, graph_json=json.dumps(graph_data), rel_path_val=rel_path_str)
     with open(dir_path / "readme.html", "w", encoding="utf-8") as f: f.write(html)
     return total_size, avg_eff
 
 def generate_root_dashboard(root_path, global_stats, graph_data):
     root_path = Path(root_path)
-    html = ROOT_TEMPLATE.format(
-        stats_json=json.dumps(global_stats),
-        graph_json=json.dumps(graph_data),
-        plans=get_plans_from_file(root_path),
-        rel_path_val="."
-    )
+    # Correctly replace the placeholders in ROOT_TEMPLATE
+    html = ROOT_TEMPLATE.replace("{stats_json}", json.dumps(global_stats))
+    html = html.replace("{graph_json}", json.dumps(graph_data))
+    html = html.replace("{GITHUB_REPO_URL}", json.dumps(GITHUB_REPO_URL))
+    html = html.replace("{rel_path_val}", ".")
+    
     with open(root_path / "readme.html", "w", encoding="utf-8") as f:
         f.write(html)
     print("Enchanted Root Dashboard Generated.")
@@ -665,20 +702,15 @@ def main():
     global_stats = {"total_volume_bytes": 0, "avg_efficiency": 0, "directories": 0, "files": 0}
     eff_list = []
 
-    # Process all targets
     for target in targets:
         target_path = root / target
         if target_path.exists() and target_path.is_dir():
             print(f"Enriching {target_path}...")
-            # Generate for the target itself
             size, eff = generate_readme(target_path, root, graph_data)
             global_stats["total_volume_bytes"] += size
             global_stats["directories"] += 1
             eff_list.append(eff)
-            
-            # Generate for ALL subdirectories
             for dirpath, dirnames, filenames in os.walk(target_path):
-                # Allow .ai folders anywhere, but filter other hidden ones
                 dirnames[:] = [d for d in dirnames if not d.startswith(".") or d == ".ai"]
                 for d in dirnames:
                     full_p = Path(dirpath) / d
@@ -689,36 +721,15 @@ def main():
                     eff_list.append(eff)
 
     global_stats["avg_efficiency"] = int(sum(eff_list)/len(eff_list)) if eff_list else 100
-    
-    # Export Data (Still useful for external tools)
     with open(root / ".ai" / "workspace_graph.json", "w", encoding="utf-8") as f:
         json.dump(graph_data, f, indent=2)
     
-    # Load Node Health
-    node_health = {}
-    node_health_path = root / ".ai" / "node_health.json"
-    if node_health_path.exists():
-        with open(node_health_path, "r", encoding="utf-8") as f:
-            node_health = json.load(f)
-    
-    global_stats["node_health"] = node_health
-    
-    with open(root / ".ai" / "system_stats.json", "w", encoding="utf-8") as f:
-        json.dump(global_stats, f, indent=2)
-
-    # Generate the Enchanted Root with local data
-    # Load Git Pulse
     git_path = root / ".ai" / "git_status.json"
-    if git_path.exists():
-        global_stats["git_pulse"] = json.loads(git_path.read_text())
-        
-    # Load Dep Hoist
+    if git_path.exists(): global_stats["git_pulse"] = json.loads(git_path.read_text())
     hoist_path = root / ".ai" / "dep_hoist_audit.json"
-    if hoist_path.exists():
-        global_stats["dep_hoist"] = json.loads(hoist_path.read_text())
+    if hoist_path.exists(): global_stats["dep_hoist"] = json.loads(hoist_path.read_text())
 
     generate_root_dashboard(root, global_stats, graph_data)
-
     print("Architectural Neural Export Complete.")
 
 if __name__ == "__main__":

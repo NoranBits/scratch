@@ -30,12 +30,16 @@ def main():
     
     # 3. Node/NPM Sync (via Shim)
     if (TOOLS / "ag_npm_shim.py").exists():
-        run_step("Node Health Sync", [sys.executable, str(TOOLS / "ag_npm_shim.py"), "run", "sync"], ROOT)
+        run_step("Node Health Sync", [sys.executable, str(TOOLS / "ag_npm_shim.py"), "sync"], ROOT)
     
-    # 4. Neural Documentation Generation
+    # 4. GPG Security Audit
+    if (TOOLS / "ag_gpg_manager.py").exists():
+        run_step("Security Audit", [sys.executable, str(TOOLS / "ag_gpg_manager.py")], ROOT)
+
+    # 5. Neural Documentation Generation
     run_step("Neural Refresh", [sys.executable, str(TOOLS / "ag_readme_gen.py")], ROOT)
     
-    print("\n✅ Workplace Setup Complete. Mission Control updated.")
+    print("\n[SUCCESS] Workplace Setup Complete. Mission Control updated.")
 
 if __name__ == "__main__":
     main()

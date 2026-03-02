@@ -6,19 +6,30 @@
     <title>AntiGravity | .ai/STREAMS</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap');
         :root { --cyan: #22d3ee; --purple: #a855f7; --bg: #020617; }
         body { background-color: var(--bg); color: #f8fafc; font-family: 'Outfit', sans-serif; min-height: 100vh; }
         .glass { background: rgba(15, 23, 42, 0.4); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); }
         .cyber-grid { background-image: linear-gradient(rgba(34, 211, 238, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(34, 211, 238, 0.03) 1px, transparent 1px); background-size: 40px 40px; }
+        .neuron-node { stroke: #fff; stroke-width: 1px; cursor: pointer; opacity: 0.8; }
+        .neuron-node.active { stroke-width: 2px; filter: drop-shadow(0 0 8px var(--cyan)); opacity: 1; }
+        .neuron-link { stroke: rgba(34, 211, 238, 0.1); stroke-opacity: 0.4; stroke-width: 1px; }
         .file-row:hover { background: rgba(255, 255, 255, 0.03); }
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-thumb { background: rgba(34, 211, 238, 0.2); border-radius: 10px; }
     </style>
 </head>
-<body class="cyber-grid min-h-screen p-8">
-    <div class="max-w-6xl mx-auto space-y-8">
+<body class="bg-slate-950 text-slate-200 font-sans min-h-screen flex flex-col items-center">
+    <!-- Neural Header (Sticky & Responsive) -->
+    <section class="sticky top-0 z-50 w-full glass border-b border-white/10 overflow-hidden min-h-[300px] shadow-2xl backdrop-blur-xl">
+        <div class="absolute top-4 left-6 z-20 pointer-events-none">
+            <h2 class="text-[10px] font-bold text-cyan-400 uppercase tracking-[0.3em] mb-1">Architectural Pulse</h2>
+            <p class="text-[9px] text-slate-500 italic">Always-in-view neural context.</p>
+        </div>
+        <div id="neuron-graph" class="w-full h-[300px]"></div>
+    </section>
+
+    <div class="w-full max-w-6xl p-6 lg:p-12 space-y-8 relative z-10">
         <nav class="flex items-center justify-between glass p-4 rounded-xl">
             <div class="flex items-center gap-4">
                 <div class="w-8 h-8 bg-gradient-to-br from-cyan-400 to-purple-600 rounded-lg flex items-center justify-center font-bold text-white italic">AG</div>
@@ -27,7 +38,13 @@
                     <span class="text-sm font-mono text-cyan-400">ROOT/.ai/STREAMS</span>
                 </div>
             </div>
-            <a href="../readme.html" class="text-xs font-bold text-slate-400 hover:text-white transition-all uppercase tracking-widest">Back to Parent</a>
+            <div class="flex items-center gap-6">
+                <a href="../readme.html" class="text-xs font-bold text-slate-400 hover:text-white transition-all uppercase tracking-widest flex items-center gap-2">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+                    Back
+                </a>
+                <a href="https://github.com/NoranBits/scratch/tree/master/.ai/STREAMS" target="_blank" class="text-xs font-bold text-cyan-400 hover:text-cyan-300 transition-all uppercase tracking-widest flex items-center gap-2"><svg class="w-3 h-3" fill="currentColor" viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg> View on GitHub</a>
+            </div>
         </nav>
 
         <div class="grid lg:grid-cols-[1fr_350px] gap-8">
@@ -177,6 +194,8 @@
     <script>
         const ctx = document.getElementById('typeChart').getContext('2d');
         const stats = {"folder": 2, "md": 1, "json": 6};
+        const graph = {"nodes": [{"id": "node_.ai", "name": ".ai", "path": ".ai", "type": "directory", "size_raw": 287642, "eff": 83, "density": 1.0}, {"id": "node_.ai/AGNOSTIC-ORCH", "name": "AGNOSTIC-ORCH", "path": ".ai/AGNOSTIC-ORCH", "type": "directory", "size_raw": 6649, "eff": 86, "density": 0.30000000000000004}, {"id": "node_.ai/ARCHIVE", "name": "ARCHIVE", "path": ".ai/ARCHIVE", "type": "directory", "size_raw": 0, "eff": 100, "density": 0.25}, {"id": "node_.ai/DECISIONS", "name": "DECISIONS", "path": ".ai/DECISIONS", "type": "directory", "size_raw": 2835, "eff": 86, "density": 0.15000000000000002}, {"id": "node_.ai/EVIDENCE", "name": "EVIDENCE", "path": ".ai/EVIDENCE", "type": "data", "size_raw": 7025, "eff": 87, "density": 0.8}, {"id": "node_.ai/FEDERATION", "name": "FEDERATION", "path": ".ai/FEDERATION", "type": "directory", "size_raw": 1772, "eff": 83, "density": 0.25}, {"id": "node_.ai/FEDERATION_TEMPLATE", "name": "FEDERATION_TEMPLATE", "path": ".ai/FEDERATION_TEMPLATE", "type": "directory", "size_raw": 2678, "eff": 81, "density": 0.25}, {"id": "node_.ai/GPG", "name": "GPG", "path": ".ai/GPG", "type": "directory", "size_raw": 4588, "eff": 100, "density": 0.8}, {"id": "node_.ai/SAMPLES", "name": "SAMPLES", "path": ".ai/SAMPLES", "type": "sample", "size_raw": 48063, "eff": 84, "density": 0.9500000000000002}, {"id": "node_.ai/SKILLS", "name": "SKILLS", "path": ".ai/SKILLS", "type": "directory", "size_raw": 789, "eff": 85, "density": 0.35000000000000003}, {"id": "node_.ai/SKILLSETS", "name": "SKILLSETS", "path": ".ai/SKILLSETS", "type": "directory", "size_raw": 1370, "eff": 84, "density": 0.2}, {"id": "node_.ai/STATE", "name": "STATE", "path": ".ai/STATE", "type": "data", "size_raw": 266, "eff": 91, "density": 0.1}, {"id": "node_.ai/STREAMS", "name": "STREAMS", "path": ".ai/STREAMS", "type": "directory", "size_raw": 7926, "eff": 81, "density": 0.8}], "links": [{"source": "node_.ai", "target": "node_.ai/AGNOSTIC-ORCH", "type": "nesting"}, {"source": "node_.ai", "target": "node_.ai/ARCHIVE", "type": "nesting"}, {"source": "node_.ai", "target": "node_.ai/DECISIONS", "type": "nesting"}, {"source": "node_.ai", "target": "node_.ai/EVIDENCE", "type": "nesting"}, {"source": "node_.ai", "target": "node_.ai/FEDERATION", "type": "nesting"}, {"source": "node_.ai", "target": "node_.ai/FEDERATION_TEMPLATE", "type": "nesting"}, {"source": "node_.ai", "target": "node_.ai/GPG", "type": "nesting"}, {"source": "node_.ai", "target": "node_.ai/SAMPLES", "type": "nesting"}, {"source": "node_.ai", "target": "node_.ai/SKILLS", "type": "nesting"}, {"source": "node_.ai", "target": "node_.ai/SKILLSETS", "type": "nesting"}, {"source": "node_.ai", "target": "node_.ai/STATE", "type": "nesting"}, {"source": "node_.ai", "target": "node_.ai/STREAMS", "type": "nesting"}, {"source": "node_.ai", "target": "node_.ai/TASKS", "type": "nesting"}, {"source": "node_.ai", "target": "node_.ai/tools", "type": "nesting"}, {"source": "node_.ai/AGNOSTIC-ORCH", "target": "node_.ai/AGNOSTIC-ORCH/knowledge", "type": "nesting"}, {"source": "node_.ai/ARCHIVE", "target": "node_.ai/ARCHIVE/summaries", "type": "nesting"}, {"source": "node_.ai/EVIDENCE", "target": "node_.ai/EVIDENCE/federation", "type": "nesting"}, {"source": "node_.ai/EVIDENCE", "target": "node_.ai/EVIDENCE/research_reports", "type": "nesting"}, {"source": "node_.ai/GPG", "target": "node_.ai/GPG/openpgp-revocs.d", "type": "nesting"}, {"source": "node_.ai/GPG", "target": "node_.ai/GPG/private-keys-v1.d", "type": "nesting"}, {"source": "node_.ai/SAMPLES", "target": "node_.ai/SAMPLES/node_tools", "type": "nesting"}, {"source": "node_.ai/SAMPLES", "target": "node_.ai/SAMPLES/SKILLS", "type": "nesting"}, {"source": "node_.ai/SAMPLES", "target": "node_.ai/SAMPLES/SKILLSETS", "type": "nesting"}, {"source": "node_.ai/SKILLS", "target": "node_.ai/SKILLS/_template", "type": "nesting"}, {"source": "node_.ai/STREAMS", "target": "node_.ai/STREAMS/20260301", "type": "nesting"}, {"source": "node_.ai/STREAMS", "target": "node_.ai/STREAMS/_config", "type": "nesting"}]};
+        const currentPath = ".ai/STREAMS";
         
         new Chart(ctx, {
             type: 'doughnut',
@@ -190,6 +209,59 @@
                 }]
             },
             options: { cutout: '80%', plugins: { legend: { display: false } } }
+        });
+
+        // Neuron Pulse Header
+        const container = document.getElementById('neuron-graph');
+        let width = container.clientWidth;
+        let height = container.clientHeight;
+
+        const svg = d3.select("#neuron-graph").append("svg")
+            .attr("viewBox", [0, 0, width, height]);
+
+        const colorMap = {
+            "root": "#22d3ee",
+            "tool_py": "#a855f7",
+            "tool_node": "#10b981",
+            "sample": "#f59e0b",
+            "data": "#f43f5e",
+            "remote_repo": "#3b82f6",
+            "directory": "#64748b"
+        };
+
+        const simulation = d3.forceSimulation(graph.nodes)
+            .force("link", d3.forceLink(graph.links).id(d => d.id).distance(80))
+            .force("charge", d3.forceManyBody().strength(-200))
+            .force("center", d3.forceCenter(width / 2, height / 2));
+
+        const link = svg.append("g")
+            .selectAll("line")
+            .data(graph.links)
+            .join("line")
+            .attr("class", "neuron-link")
+            .style("stroke-opacity", d => (d.source.path === currentPath || d.target.path === currentPath) ? 0.8 : 0.2);
+
+        const node = svg.append("g")
+            .selectAll("circle")
+            .data(graph.nodes)
+            .join("circle")
+            .attr("r", d => d.path === currentPath ? 10 : (5 + (d.density * 5)))
+            .attr("class", d => "neuron-node" + (d.path === currentPath ? " active" : ""))
+            .attr("fill", d => colorMap[d.type] || colorMap["directory"])
+            .style("opacity", d => 0.5 + (d.density * 0.5))
+            .on("click", (e, d) => window.location.href = (currentPath === "." ? "" : "../".repeat(currentPath.split('/').length)) + d.path + '/readme.html');
+
+        simulation.on("tick", () => {
+            link.attr("x1", d => d.source.x).attr("y1", d => d.source.y)
+                .attr("x2", d => d.target.x).attr("y2", d => d.target.y);
+            node.attr("cx", d => d.x).attr("cy", d => d.y);
+        });
+
+        window.addEventListener("resize", () => {
+            width = container.clientWidth;
+            height = container.clientHeight;
+            svg.attr("viewBox", [0, 0, width, height]);
+            simulation.force("center", d3.forceCenter(width / 2, height / 2)).alpha(0.3).restart();
         });
     </script>
 </body>
