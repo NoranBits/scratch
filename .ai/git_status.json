@@ -1,38 +1,38 @@
 {
   "is_repo": true,
   "branch": "dev",
-  "last_commit": "117c4d1 - merge: resolve conflicts between neural scaling and github enchantments (0 seconds ago)",
+  "last_commit": "b50c411 - docs: regenerate enchanted readmes on dev branch (4 minutes ago)",
   "remotes": [
     "origin"
   ],
-  "status": "8 changes",
+  "status": "5 changes",
   "phases": {
     "dev": {
-      "last_commit": "117c4d1 (1 second ago)",
+      "last_commit": "b50c411 (4 minutes ago)",
       "exists": true
     },
     "demos": {
-      "last_commit": "b071527 (19 minutes ago)",
+      "last_commit": "b071527 (24 minutes ago)",
       "exists": true
     },
     "alphas": {
-      "last_commit": "a30c59d (79 minutes ago)",
+      "last_commit": "a30c59d (83 minutes ago)",
       "exists": true
     },
     "betas": {
-      "last_commit": "a30c59d (79 minutes ago)",
+      "last_commit": "a30c59d (83 minutes ago)",
       "exists": true
     },
     "open-betas": {
-      "last_commit": "a30c59d (79 minutes ago)",
+      "last_commit": "a30c59d (83 minutes ago)",
       "exists": true
     },
     "production": {
-      "last_commit": "a30c59d (79 minutes ago)",
+      "last_commit": "a30c59d (83 minutes ago)",
       "exists": true
     },
     "maintenance": {
-      "last_commit": "a30c59d (79 minutes ago)",
+      "last_commit": "a30c59d (83 minutes ago)",
       "exists": true
     }
   }
