@@ -1,0 +1,67 @@
+name: AntiGravity Ecosystem Release
+
+on:
+  push:
+    branches: [ master, dev, main ]
+  release:
+    types: [created]
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Run AntiGravity Suite
+        run: |
+          python .ai/tools/ag_git_pulse.py
+          python .ai/tools/ag_dep_hoister.py
+          python .ai/tools/ag_readme_gen.py
+
+      - name: Package Tools
+        run: |
+          mkdir -p release
+          zip -r release/ag-tools-v${{ github.run_number }}.zip .ai/tools src/ -x "*.pyc" "__pycache__/*"
+          
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: release-package
+          path: release/
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./
+          publish_branch: gh-pages
+          force_push: true
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+
+      - name: Update Documentation on Branch
+        if: github.event_name == 'push'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .
+          git commit -m "docs: enchanted neural documentation sync [skip ci]" || echo "No changes to commit"
+          git push

@@ -1,7 +1,20 @@
 import os
 import json
 import re
+import subprocess
 from pathlib import Path
+
+def get_github_url():
+    try:
+        remotes = subprocess.run(["git", "remote", "-v"], capture_output=True, text=True).stdout
+        match = re.search(r'github\.com[:/](.+?)\.git', remotes)
+        if match:
+            return f"https://github.com/{match.group(1)}"
+    except:
+        pass
+    return None
+
+GITHUB_REPO_URL = get_github_url()
 
 # --- TEMPLATES ---
 # --- TEMPLATES ---
@@ -39,12 +52,25 @@ ROOT_TEMPLATE = """<!DOCTYPE html>
                 <div class="w-16 h-16 bg-gradient-to-br from-cyan-400 to-purple-600 rounded-2xl flex items-center justify-center text-3xl font-black text-white italic shadow-[0_0_20px_rgba(34,211,238,0.4)]">AG</div>
                 <div>
                     <h1 class="text-4xl font-extrabold tracking-tighter uppercase mb-1">Mission Control</h1>
-                    <p class="text-sm font-mono text-cyan-400/80 tracking-widest uppercase italic">Architectural Neuron Interface v4.0</p>
+                    <div class="flex items-center gap-3">
+                        <p class="text-sm font-mono text-cyan-400/80 tracking-widest uppercase italic">Architectural Neuron Interface v4.0</p>
+                        ${{GITHUB_REPO_URL ? `
+                            <a href="${{GITHUB_REPO_URL}}" target="_blank" class="glass px-2 py-0.5 rounded text-[10px] text-slate-400 hover:text-cyan-400 border-white/5 flex items-center gap-1.5 transition-all">
+                                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+                                GitHub Repo
+                            </a>
+                        ` : ''}}
+                    </div>
                 </div>
             </div>
-            <div class="text-right hidden md:block">
+            <div class="text-right hidden md:block space-y-2">
                 <div class="text-[10px] font-bold text-slate-500 uppercase tracking-[0.3em] mb-1">Current Protocol</div>
-                <div class="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">NEURAL_INSIGHTS_ENGAGED</div>
+                <div class="flex flex-col items-end gap-2">
+                    <div class="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">NEURAL_INSIGHTS_ENGAGED</div>
+                    ${{GITHUB_REPO_URL ? `
+                        <img src="${{GITHUB_REPO_URL}}/actions/workflows/ag_neural_sync.yml/badge.svg" alt="CI Status" class="h-4 opacity-80 hover:opacity-100 transition-opacity">
+                    ` : ''}}
+                </div>
             </div>
         </header>
 
@@ -292,7 +318,13 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                     <span class="text-sm font-mono text-cyan-400">{rel_path}</span>
                 </div>
             </div>
-            <a href="{parent_link}" class="text-xs font-bold text-slate-400 hover:text-white transition-all uppercase tracking-widest">Back to Parent</a>
+            <div class="flex items-center gap-6">
+                <a href="{parent_link}" class="text-xs font-bold text-slate-400 hover:text-white transition-all uppercase tracking-widest flex items-center gap-2">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+                    Back
+                </a>
+                {github_link}
+            </div>
         </nav>
 
         <div class="grid lg:grid-cols-[1fr_350px] gap-8">
@@ -519,16 +551,21 @@ def generate_readme(dir_path, root_path, graph_data):
     
     title = rel_path_str if rel_path_str != "." else "Mission Control"
     guidance = GUIDANCE_MAP.get(rel_path_str, "Standard workspace directory. Maintain clean structure.")
-    html = HTML_TEMPLATE.format(title=title, rel_path=f"ROOT/{rel_path_str}", item_count=len(items_html), items="".join(items_html), parent_link="../readme.html" if rel_path_str != "." else "#", guidance=guidance, total_size=format_size(total_size), efficiency=avg_eff, plans=get_plans_from_file(dir_path), stats_json=json.dumps(type_stats))
+    
+    github_link = ""
+    if GITHUB_REPO_URL:
+        # Construct GitHub view URL for this specific folder
+        branch = "master" # Default, could be dynamic
+        gh_path = f"{GITHUB_REPO_URL}/tree/{branch}/{rel_path_str}" if rel_path_str != "." else GITHUB_REPO_URL
+        github_link = f'<a href="{gh_path}" target="_blank" class="text-xs font-bold text-cyan-400 hover:text-cyan-300 transition-all uppercase tracking-widest flex items-center gap-2"><svg class="w-3 h-3" fill="currentColor" viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg> View on GitHub</a>'
+
+    html = HTML_TEMPLATE.format(title=title, rel_path=f"ROOT/{rel_path_str}", item_count=len(items_html), items="".join(items_html), parent_link="../readme.html" if rel_path_str != "." else "#", guidance=guidance, total_size=format_size(total_size), efficiency=avg_eff, plans=get_plans_from_file(dir_path), stats_json=json.dumps(type_stats), github_link=github_link)
     with open(dir_path / "readme.html", "w", encoding="utf-8") as f: f.write(html)
     return total_size, avg_eff
 
 def generate_root_dashboard(root_path, global_stats, graph_data):
     root_path = Path(root_path)
-    html = ROOT_TEMPLATE.format(
-        stats_json=json.dumps(global_stats),
-        graph_json=json.dumps(graph_data)
-    )
+    html = ROOT_TEMPLATE.replace("{stats_json}", json.dumps(global_stats)).replace("{graph_json}", json.dumps(graph_data)).replace("{GITHUB_REPO_URL}", f"'{GITHUB_REPO_URL}'" if GITHUB_REPO_URL else "null")
     with open(root_path / "readme.html", "w", encoding="utf-8") as f:
         f.write(html)
     print("Enchanted Root Dashboard Generated.")
