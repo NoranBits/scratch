@@ -495,7 +495,10 @@ def generate_readme(dir_path, root_path, graph_data):
         else:
             ext = entry.suffix[1:].lower() if entry.suffix else "file"
             type_label = ext
-            size = entry.stat().st_size
+            try:
+                size = entry.stat().st_size
+            except (FileNotFoundError, PermissionError):
+                size = 0
             total_size += size
             eff = get_token_efficiency(entry)
             efficiencies.append(eff)

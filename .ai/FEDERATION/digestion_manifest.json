@@ -1,0 +1,27 @@
+{
+    "digested_components": [
+        {
+            "source": "external_repos/eliza/packages/typescript/src",
+            "target": "src/eliza_core",
+            "upstream": "https://github.com/NoranBits/eliza.git",
+            "commit": "645f273ed2eee2f5777193ee7d9d94c8a4444767",
+            "timestamp": "2026-03-02T01:07:48.203973"
+        },
+        {
+            "source": "external_repos/agentloop/agentloop",
+            "target": "src/agentloop_core",
+            "upstream": "https://github.com/NoranBits/agentloop.git",
+            "commit": "647ed2c9b8da56db646274417174c192d461b2f4",
+            "timestamp": "2026-03-02T01:07:48.409028"
+        },
+        {
+            "source": "external_repos/characterfile/schema",
+            "target": "src/character_schema",
+            "upstream": "https://github.com/NoranBits/characterfile.git",
+            "commit": "4910d19e47cbd0deb33ba34a6e956bd91381e311",
+            "timestamp": "2026-03-02T01:08:00.271473"
+        }
+    ],
+    "last_audit": null,
+    "system_version": "1.0.0"
+}

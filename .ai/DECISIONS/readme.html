@@ -52,7 +52,7 @@
                 <section class="glass rounded-2xl border-slate-700/50 overflow-hidden">
                     <div class="bg-slate-900/60 px-6 py-4 border-b border-slate-800/50 flex justify-between items-center">
                         <h2 class="text-xl font-bold text-white uppercase tracking-tighter">Node Contents</h2>
-                        <span class="text-[10px] font-mono text-slate-500">1 items detected</span>
+                        <span class="text-[10px] font-mono text-slate-500">2 items detected</span>
                     </div>
                     <div class="divide-y divide-slate-800/40 max-h-[600px] overflow-y-auto scroll-hide">
                         
@@ -60,6 +60,15 @@
     <div class="flex items-center gap-3">
         <span class="text-slate-200"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 16 16"><path d="M4 0h5.5L14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L4 0zm0 1v13a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V5h-4V1H5a1 1 0 0 0-1 1z"/></svg></span>
         <span class="text-sm font-mono text-slate-200">DEC-20260228-0004.md</span>
+    </div>
+    <div class="flex-grow"></div>
+    <span class="text-[10px] font-mono text-slate-600 uppercase tracking-widest">md</span>
+</div>
+
+<div class="file-row px-6 py-3 flex items-center transition-all cursor-pointer" onclick="window.location.href='semantic_commits.md'">
+    <div class="flex items-center gap-3">
+        <span class="text-slate-200"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 16 16"><path d="M4 0h5.5L14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L4 0zm0 1v13a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V5h-4V1H5a1 1 0 0 0-1 1z"/></svg></span>
+        <span class="text-sm font-mono text-slate-200">semantic_commits.md</span>
     </div>
     <div class="flex-grow"></div>
     <span class="text-[10px] font-mono text-slate-600 uppercase tracking-widest">md</span>
@@ -76,17 +85,17 @@
                     <div class="aspect-square relative flex items-center justify-center">
                         <canvas id="typeChart"></canvas>
                         <div class="absolute text-center">
-                            <span class="block text-2xl font-black text-white">88%</span>
+                            <span class="block text-2xl font-black text-white">86%</span>
                             <span class="text-[10px] font-mono text-slate-500 uppercase tracking-widest">Token Efficiency</span>
                         </div>
                     </div>
                     <div class="mt-6 space-y-4">
                         <div class="flex justify-between text-[10px] font-mono text-slate-500 uppercase">
                             <span>Total Volume</span>
-                            <span class="text-white">1.4 KB</span>
+                            <span class="text-white">2.8 KB</span>
                         </div>
                         <div class="h-1.5 bg-slate-800 rounded-full overflow-hidden">
-                            <div class="bg-purple-500 h-full shadow-[0_0_8px_var(--purple)]" style="width: 88%"></div>
+                            <div class="bg-purple-500 h-full shadow-[0_0_8px_var(--purple)]" style="width: 86%"></div>
                         </div>
                         <div class="p-3 bg-slate-950/50 rounded-lg border border-slate-800/50">
                             <p class="text-[10px] text-slate-500 uppercase mb-1">Architecture Note</p>
@@ -104,7 +113,7 @@
 
     <script>
         const ctx = document.getElementById('typeChart').getContext('2d');
-        const stats = {"md": 1};
+        const stats = {"md": 2};
         
         new Chart(ctx, {
             type: 'doughnut',

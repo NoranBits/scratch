@@ -1,0 +1,39 @@
+{
+  "is_repo": true,
+  "branch": "master",
+  "last_commit": "a30c59d - chore: finalize workplace setup & master orchestration (70 minutes ago)",
+  "remotes": [
+    "origin"
+  ],
+  "status": "489 changes",
+  "phases": {
+    "dev": {
+      "last_commit": "b071527 (11 minutes ago)",
+      "exists": true
+    },
+    "demos": {
+      "last_commit": "b071527 (11 minutes ago)",
+      "exists": true
+    },
+    "alphas": {
+      "last_commit": "a30c59d (70 minutes ago)",
+      "exists": true
+    },
+    "betas": {
+      "last_commit": "a30c59d (70 minutes ago)",
+      "exists": true
+    },
+    "open-betas": {
+      "last_commit": "a30c59d (70 minutes ago)",
+      "exists": true
+    },
+    "production": {
+      "last_commit": "a30c59d (70 minutes ago)",
+      "exists": true
+    },
+    "maintenance": {
+      "last_commit": "a30c59d (70 minutes ago)",
+      "exists": true
+    }
+  }
+}
