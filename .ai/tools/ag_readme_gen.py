@@ -102,28 +102,77 @@ ROOT_TEMPLATE = """<!DOCTYPE html>
                     <div id="neuron-graph" class="w-full h-[550px]"></div>
                 </section>
 
-                <!-- Knowledge Base & Governance -->
-                <div class="grid md:grid-cols-2 gap-8">
-                    <section class="glass p-8 rounded-2xl border-cyan-500/20 space-y-6">
-                        <div class="flex items-center gap-4">
-                            <div class="p-3 bg-cyan-500/10 rounded-xl"><svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg></div>
-                            <h2 class="text-2xl font-bold tracking-tighter uppercase">Knowledge Base</h2>
+                <!-- Knowledge Base, Governance & Antigravity Platform -->
+                <div class="grid md:grid-cols-3 gap-6">
+                    <section class="glass p-6 rounded-2xl border-cyan-500/20 space-y-5">
+                        <div class="flex items-center gap-3">
+                            <div class="p-2.5 bg-cyan-500/10 rounded-xl"><svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg></div>
+                            <h2 class="text-lg font-bold tracking-tighter uppercase">Knowledge Base</h2>
                         </div>
-                        <ul class="space-y-3">
-                            <li><a href=".ai/INDEX.md" class="text-sm text-slate-400 hover:text-cyan-400 flex justify-between group transition-all"><span>System Index</span><span class="text-[10px] opacity-0 group-hover:opacity-100 italic transition-all">View INDEX.md &rarr;</span></a></li>
-                            <li><a href=".ai/STATE/readme.html" class="text-sm text-slate-400 hover:text-cyan-400 flex justify-between group transition-all"><span>State Anchors</span><span class="text-[10px] opacity-0 group-hover:opacity-100 italic transition-all">View State &rarr;</span></a></li>
-                            <li><a href=".ai/SKILLS/INDEX.md" class="text-sm text-slate-400 hover:text-cyan-400 flex justify-between group transition-all"><span>Skill Registry</span><span class="text-[10px] opacity-0 group-hover:opacity-100 italic transition-all">View Skills &rarr;</span></a></li>
+                        <ul class="space-y-2.5">
+                            <li><a href=".ai/INDEX.md" class="text-sm text-slate-400 hover:text-cyan-400 flex justify-between group transition-all"><span>System Index</span><span class="text-[10px] opacity-0 group-hover:opacity-100 italic transition-all">View &rarr;</span></a></li>
+                            <li><a href=".ai/STATE/readme.html" class="text-sm text-slate-400 hover:text-cyan-400 flex justify-between group transition-all"><span>State Anchors</span><span class="text-[10px] opacity-0 group-hover:opacity-100 italic transition-all">View &rarr;</span></a></li>
+                            <li><a href=".ai/SKILLS/INDEX.md" class="text-sm text-slate-400 hover:text-cyan-400 flex justify-between group transition-all"><span>Skill Registry</span><span class="text-[10px] opacity-0 group-hover:opacity-100 italic transition-all">View &rarr;</span></a></li>
+                            <li><a href=".ai/SKILLSETS/INDEX.md" class="text-sm text-slate-400 hover:text-cyan-400 flex justify-between group transition-all"><span>Active Skillsets</span><span class="text-[10px] opacity-0 group-hover:opacity-100 italic transition-all">View &rarr;</span></a></li>
+                            <li><a href=".ai/EVIDENCE/registry.md" class="text-sm text-slate-400 hover:text-cyan-400 flex justify-between group transition-all"><span>Evidence Registry</span><span class="text-[10px] opacity-0 group-hover:opacity-100 italic transition-all">View &rarr;</span></a></li>
                         </ul>
                     </section>
-                    <section class="glass p-8 rounded-2xl border-purple-500/20 space-y-6">
-                        <div class="flex items-center gap-4">
-                            <div class="p-3 bg-purple-500/10 rounded-xl"><svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg></div>
-                            <h2 class="text-2xl font-bold tracking-tighter uppercase">Governance</h2>
+                    <section class="glass p-6 rounded-2xl border-purple-500/20 space-y-5">
+                        <div class="flex items-center gap-3">
+                            <div class="p-2.5 bg-purple-500/10 rounded-xl"><svg class="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg></div>
+                            <h2 class="text-lg font-bold tracking-tighter uppercase">Governance</h2>
                         </div>
-                        <ul class="space-y-3">
-                            <li><a href=".ai/tools/HARMONIZATION_RULES.json" class="text-sm text-slate-400 hover:text-purple-400 flex justify-between group transition-all"><span>Harmonization Rules</span><span class="text-[10px] opacity-0 group-hover:opacity-100 italic transition-all">View JSON &rarr;</span></a></li>
-                            <li><a href=".ai/DECISIONS/readme.html" class="text-sm text-slate-400 hover:text-purple-400 flex justify-between group transition-all"><span>Architectural Decisions</span><span class="text-[10px] opacity-0 group-hover:opacity-100 italic transition-all">View ADRs &rarr;</span></a></li>
+                        <ul class="space-y-2.5">
+                            <li><a href=".ai/AGNOSTIC-ORCH/MASTER_SYSTEM_INSTRUCTION_AI_AGNOSTIC_v1.2.1.md" class="text-sm text-slate-400 hover:text-purple-400 flex justify-between group transition-all"><span>Master Instruction v1.2.1</span><span class="text-[10px] opacity-0 group-hover:opacity-100 italic transition-all">View &rarr;</span></a></li>
+                            <li><a href=".ai/tools/HARMONIZATION_RULES.json" class="text-sm text-slate-400 hover:text-purple-400 flex justify-between group transition-all"><span>Harmonization Rules</span><span class="text-[10px] opacity-0 group-hover:opacity-100 italic transition-all">View &rarr;</span></a></li>
+                            <li><a href=".ai/DECISIONS/readme.html" class="text-sm text-slate-400 hover:text-purple-400 flex justify-between group transition-all"><span>Architectural Decisions</span><span class="text-[10px] opacity-0 group-hover:opacity-100 italic transition-all">View &rarr;</span></a></li>
+                            <li><a href=".ai/STREAMS/readme.html" class="text-sm text-slate-400 hover:text-purple-400 flex justify-between group transition-all"><span>Intent Streams</span><span class="text-[10px] opacity-0 group-hover:opacity-100 italic transition-all">View &rarr;</span></a></li>
                         </ul>
+                    </section>
+                    <!-- Antigravity Platform Panel -->
+                    <section class="glass p-6 rounded-2xl border-amber-500/20 space-y-5 relative overflow-hidden">
+                        <div class="absolute inset-0 bg-gradient-to-br from-amber-500/5 to-transparent pointer-events-none"></div>
+                        <div class="flex items-center gap-3 relative">
+                            <div class="p-2.5 bg-amber-500/10 rounded-xl">
+                                <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                            </div>
+                            <div>
+                                <h2 class="text-lg font-bold tracking-tighter uppercase text-amber-400">Antigravity Platform</h2>
+                                <p class="text-[10px] text-slate-500 font-mono">v1.2.1 · AI-Agnostic</p>
+                            </div>
+                        </div>
+                        <div class="relative space-y-2">
+                            <p class="text-[10px] font-bold text-slate-600 uppercase tracking-widest mb-2">KB Authority Layers</p>
+                            <div class="space-y-1.5">
+                                <a href="https://antigravity.google/docs/rules" target="_blank" class="flex items-center gap-2 group">
+                                    <span class="w-4 h-4 rounded text-[8px] font-black bg-rose-500/20 text-rose-400 flex items-center justify-center flex-shrink-0">01</span>
+                                    <span class="text-xs text-slate-400 group-hover:text-amber-400 transition-all">Security Layer</span>
+                                </a>
+                                <a href="https://antigravity.google/docs/rules" target="_blank" class="flex items-center gap-2 group">
+                                    <span class="w-4 h-4 rounded text-[8px] font-black bg-cyan-500/20 text-cyan-400 flex items-center justify-center flex-shrink-0">00</span>
+                                    <span class="text-xs text-slate-400 group-hover:text-amber-400 transition-all">Protocol Layer</span>
+                                </a>
+                                <a href="https://antigravity.google/docs/rules" target="_blank" class="flex items-center gap-2 group">
+                                    <span class="w-4 h-4 rounded text-[8px] font-black bg-purple-500/20 text-purple-400 flex items-center justify-center flex-shrink-0">02</span>
+                                    <span class="text-xs text-slate-400 group-hover:text-amber-400 transition-all">Context Arch Layer</span>
+                                </a>
+                                <a href="https://antigravity.google/docs/rules" target="_blank" class="flex items-center gap-2 group">
+                                    <span class="w-4 h-4 rounded text-[8px] font-black bg-emerald-500/20 text-emerald-400 flex items-center justify-center flex-shrink-0">07</span>
+                                    <span class="text-xs text-slate-400 group-hover:text-amber-400 transition-all">Tooling Arch Layer</span>
+                                </a>
+                                <a href="https://antigravity.google/docs/rules" target="_blank" class="flex items-center gap-2 group">
+                                    <span class="w-4 h-4 rounded text-[8px] font-black bg-slate-500/20 text-slate-400 flex items-center justify-center flex-shrink-0">05</span>
+                                    <span class="text-xs text-slate-400 group-hover:text-amber-400 transition-all">Handoff Protocol</span>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="relative pt-3 border-t border-white/5 flex items-center justify-between">
+                            <span class="text-[10px] text-slate-600 font-mono">Zero-Trust · AI-Agnostic</span>
+                            <a href="https://antigravity.google/docs" target="_blank" class="text-[10px] font-bold text-amber-400 hover:text-amber-300 transition-all flex items-center gap-1 uppercase tracking-widest">
+                                Full Docs
+                                <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                            </a>
+                        </div>
                     </section>
                 </div>
             </div>
